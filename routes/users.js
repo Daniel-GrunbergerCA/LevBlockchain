@@ -1,19 +1,14 @@
 var express = require('express');
+const { use } = require('passport');
 var router = express.Router();
 var path = require('path');
 const User = require('../models/users');
+const Transactions = require('../models/transactions');
 var ObjectID = require('mongodb').ObjectID;
 
 router.get('/',  async (req, res) => {
-  //  res.json({"users": ["one", "two", "three"]});
-//   try {
-//     users =  await User.getAll();
-//     res.send(users);
-//   }
-//   catch (err) { console.log(`Failed: ${err}`) }
+
 });
-
-
 
 
 router.get('/all', async function (req, res, next) {
@@ -35,8 +30,7 @@ router.get('/all', async function (req, res, next) {
   
 router.post('/add', async function (req, res) {
     postData = req.body;
-    action = postData.action;
-
+ 
     let user = {
         firstName: postData.firstname,
         lastName: postData.lastname,
@@ -47,68 +41,85 @@ router.post('/add', async function (req, res) {
         email: postData.email,
     };
     let password =   postData.password;
-    if (action == 'add') {
-        await createUser(user, password);
+    try {
+        await User.register(user, password);
     }
-    else if (action == 'edit') {
-        editUser(user);
-    }
-    else if (action == 'delete') {
-        deleteUser(user);
-    }
-    else {
-        res.sendStatus(400);
-    }
+    catch (err) { console.log(`Failed: ${err}`) };
     res.sendStatus(200);
   
 });
 
-router.get('/new', function(req, res) {       
-    Users=new User({username : "danielg", email: "danielg@gmail.com",firstname:"daniel", 
-        lastname: "grunberger", position:'Manager'});   
-          User.register(Users, req.body.password, function(err, user) { 
-            if (err) { 
-              res.json({success:false, message:"Your account could not be saved. Error: ", err}) 
-            }else{ 
-                res.render('index.ejs');
-            } 
-          }); 
+router.post('/edit', async function (req, res) {
+    postData = req.body;
+    let user = {
+        firstName: postData.firstname,
+        lastName: postData.lastname,
+        position:postData.position,
+        username: postData.username,
+        status: 'active',
+        address: postData.address,
+        email: postData.email,
+    };
+    currentUser = req.user.username;
+    userFromDB = await User.getByUsername(currentUser);
+    
+    if (userFromDB.username == currentUser.username || userFromDB.position == "manager") {
+        try {
+            await User.edit(user);
+        }
+        catch (err) { console.log(`Failed: ${err}`) };
+        res.sendStatus(200);
+    }
+    else {
+        res.send(401);
+    }
 });
 
-  
-async function createUser(user, password) {
-    try {
-        await User.register(user, password);
-    }
-    catch (err) { console.log(`Failed: ${err}`) }
-};
-  
-  
-router.post('/update', async function (req, res, next) {
+
+
+router.post('/delete', async function (req, res) {
+    postData = req.body;
+    let user = {
+        username: postData.username,
+    };
     currentUser = req.user.username;
-    currentUser = await User.getByUsername(currentUser);
-    updatedUser= new User({username : req.body.username, firstName: req.body.firstname, 
-        lastName: req.body.lastname, position:currentUser.position, 
-    password: currentUser.password, _id: currentUser._id});  
-    try {
-        await User.updateOne( {username: currentUser.username}, updatedUser);
+    userFromDB = await User.getByUsername(currentUser);
+    
+    if (userFromDB.username == currentUser.username || userFromDB.position == "manager") {
+        try {
+            await User.delete(user);
+        }
+        catch (err) { console.log(`Failed: ${err}`) };
+        res.sendStatus(200);
     }
-    catch (err) { console.log(`Failed: ${err}`) }
+    else {
+        res.send(401);
+    }
 });
-  
+
+
+router.get('/:username/transactions', async function (req, res, next) {
+    user = req.params.username;
+    currentUser = req.user.username;
+
+    userFromDB = await User.getByUsername(currentUser);
+    if (userFromDB.username == user || userFromDB.position == "manager") {
+        try {
+            let transactions = await Transactions.getTransactionsForUser(userFromDB);
+            res.send(transactions);
+        }
+        catch (err) { console.log(`Failed: ${err}`) }
+    }
+
+    res.sendStatus(401);
+});
+
+
 router.post('/getUser', async function (req, res, next) {
     currentUser = req.user.username;
     user = await User.getByUsername(currentUser);
     res.send(user);
 });
 
-
-async function  deleteUser(user){
-    try {
-        await User.delete(user);
-    }
-    catch (err) { console.log(`Failed: ${err}`) }
- 
- };
 
 module.exports = router;

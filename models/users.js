@@ -71,7 +71,7 @@ UserSchema.statics.getWorkers = async function() {
 };
 
 
-UserSchema.statics.update = async function(user) {
+UserSchema.statics.edit = async function(user) {
     return this.updateOne( {username: user.username}, user);
 };
 

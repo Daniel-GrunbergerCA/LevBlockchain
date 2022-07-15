@@ -61,6 +61,7 @@ TransactionSchema.statics.getAll = async function(newBlock) {
    return this.find();
 };
 
+
 TransactionSchema.statics.getTransactionsForUser = async function(username) {
     return this.find(
         {
