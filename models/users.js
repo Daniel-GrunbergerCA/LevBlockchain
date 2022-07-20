@@ -46,6 +46,10 @@ const UserSchema = new Schema({
         type: String,
         unique: true,
     },
+    image: {
+        type: String,
+        default: "",
+    },
     created_at: Date,
     updated_at: Date
 });

@@ -7,11 +7,8 @@ router.post(
     '/',
     passport.authenticate('local', {
       failureRedirect: '/register',
-      successRedirect: '/',
+      successRedirect: '/profile',
     }),
-    (req, res) => {
-      console.log(req.body.username);
-    }
   );
 
   router.get('/',(req, res) => {

@@ -4,7 +4,10 @@ var router = express.Router();
 var path = require('path');
 const User = require('../models/users');
 const Transactions = require('../models/transactions');
-var ObjectID = require('mongodb').ObjectID;
+var fs = require('fs');
+const multer = require('multer');
+
+const upload = multer();
 
 router.get('/',  async (req, res) => {
 
@@ -15,7 +18,7 @@ router.get('/all', async function (req, res, next) {
     try {
         user = await User.getByUsername(req.user.username);
         if (user.position == "manager") {
-            users =  await User.getAllClients();
+             users =  await User.getAllClients();
             res.send(users);
         }
         else {
@@ -28,19 +31,21 @@ router.get('/all', async function (req, res, next) {
          };
   })
   
-router.post('/add', async function (req, res) {
+router.post('/add', upload.single('avatarImg'),    async function (req, res) {
     postData = req.body;
- 
+   
     let user = {
-        firstName: postData.firstname,
-        lastName: postData.lastname,
+        firstName: postData.firstName,
+        lastName: postData.lastName,
         position:postData.position,
         username: postData.username,
         status: 'active',
         address: postData.address,
         email: postData.email,
+        image: postData.img,
     };
     let password =   postData.password;
+    console.log(postData)
     try {
         await User.register(user, password);
     }
@@ -59,12 +64,14 @@ router.post('/edit', async function (req, res) {
         status: 'active',
         address: postData.address,
         email: postData.email,
+        image: null
     };
     currentUser = req.user.username;
     userFromDB = await User.getByUsername(currentUser);
-    
     if (userFromDB.username == currentUser.username || userFromDB.position == "manager") {
         try {
+            user.image = userFromDB.image;
+            console.log(user)
             await User.edit(user);
         }
         catch (err) { console.log(`Failed: ${err}`) };
@@ -90,11 +97,11 @@ router.post('/delete', async function (req, res) {
             await User.delete(user);
         }
         catch (err) { console.log(`Failed: ${err}`) };
-        res.sendStatus(200);
+         res.sendStatus(200);
     }
     else {
         res.send(401);
-    }
+   }
 });
 
 

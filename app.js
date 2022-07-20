@@ -1,4 +1,5 @@
 var express = require('express');
+var cors = require("cors");
 var createError = require('http-errors');
 var path = require('path'); 
 var cookieParser = require('cookie-parser'); // middleware module of express for cookies
@@ -15,6 +16,8 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
+app.use(cors({credentials: true, origin: true}));
+app.options('*', cors());
 app.set('view engine', 'ejs');
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
