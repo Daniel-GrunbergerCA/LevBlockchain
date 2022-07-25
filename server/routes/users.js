@@ -43,9 +43,9 @@ router.post('/add', upload.single('avatarImg'),    async function (req, res) {
         address: postData.address,
         email: postData.email,
         image: postData.img,
+        balance: postData.balance
     };
     let password =   postData.password;
-    console.log(postData)
     try {
         await User.register(user, password);
     }
@@ -104,7 +104,7 @@ router.post('/delete', async function (req, res) {
    }
 });
 
-
+// not ready
 router.get('/:username/transactions', async function (req, res, next) {
     user = req.params.username;
     currentUser = req.user.username;

@@ -61,6 +61,8 @@ var usersRouter = require('./routes/users');
 var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var transactionsRouter = require('./routes/transactions');
+var messagesRouter = require('./routes/messages');
+var levCoinRouter = require('./routes/levCoin');
 
 
 app.use('/', indexRouter);
@@ -68,6 +70,8 @@ app.use('/users', usersRouter);
 app.use('/login', loginRouter);
 app.use('/profile', profileRouter);
 app.use('/transactions', transactionsRouter);
+app.use('/messages', messagesRouter);
+app.use('/levCoin', levCoinRouter);
 
 
 

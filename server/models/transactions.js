@@ -46,7 +46,7 @@ const TransactionSchema = new Schema({
 
   
 function computeHash() {
-        let strBlock = this.prevHash + this.timestamp + JSON.stringify(this.data) ;
+        let strBlock = this.prevHash + this.timestamp + JSON.stringify(this.data);
         return crypto.createHash("sha256").update(strBlock).digest("hex");
 }
 
@@ -83,7 +83,7 @@ TransactionSchema.statics.getTransactionsForUser = async function(username) {
 TransactionSchema.statics.add = async function(newBlock) {
     newBlock.prevHash = TransactionSchema.getLastBlock().hash;
     newBlock.hash = computeHash();
-    this.blockchain.push(newBlock) ;
+    //this.blockchain.push(newBlock);
     return this.create(newBlock);
 };
 

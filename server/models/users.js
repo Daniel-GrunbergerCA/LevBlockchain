@@ -50,6 +50,9 @@ const UserSchema = new Schema({
         type: String,
         default: "",
     },
+    balance: {
+        type: Number
+    },
     created_at: Date,
     updated_at: Date
 });

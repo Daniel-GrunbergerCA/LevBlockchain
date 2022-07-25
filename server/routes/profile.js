@@ -5,9 +5,13 @@ var passport = require('passport');
 
 
 router.get('/', async function(req, res) {       
-    currentUser = req.user.username;
-    user = await User.getByUsername(currentUser);
-    res.send(user);
+    currentUser = req.user;
+    if ( currentUser == undefined) {
+        res.redirect("/login");
+    } else {
+        user = await User.getByUsername(currentUser.username);
+        res.send(user);
+    }
 });
 
 router.post('/update', async function (req, res, next) {
