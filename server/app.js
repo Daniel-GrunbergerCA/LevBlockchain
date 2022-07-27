@@ -25,7 +25,7 @@ passport.deserializeUser(User.deserializeUser());
 
 
 // setup mongo
-require('dotenv').config();
+require('dotenv').config({path:'C:\\Users\\User\\OneDrive - g.jct.ac.il\\Documents\\Quatrieme_annee\\Handassa_Internet\\LevBlockchain\\server\\joss.env'});
 
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, {useNewUrlParser:true});
