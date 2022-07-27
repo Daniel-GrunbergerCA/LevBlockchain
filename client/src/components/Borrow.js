@@ -32,14 +32,15 @@ import CIcon from '@coreui/icons-react'
 import {
   cilPeople
 } from '@coreui/icons'
-
-import { getAllUsers, deleteUser, getUserProfile, getCoinValueInUSD, getCoinValueInNIS , transferMoney} from '../axios_requests'
+import { getAllUsers, deleteUser, getUserProfile, getCoinValueInUSD, getCoinValueInNIS , borrowMoney} from '../axios_requests'
 import Avatar from '@material-ui/core/Avatar'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import  EditForm  from './EditForm'
 import { BsFillChatLeftTextFill , BsFillPencilFill, BsFillTrashFill } from "react-icons/bs";
 import UserChat from './UserChat'
 import UserChatHeader from './UserChatHeader'
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 
 const currencies = {
@@ -47,17 +48,17 @@ const currencies = {
     USD: "USD",
     NIS: "NIS",
 }
-export default function Transfer() {
+export default function Borrow() {
 
 
   const [visible, setVisible] = useState(false)
   const [username, setUsername] = useState('');
   const [currency, setCurrency] = useState(currencies.LevCoin);
-  const [ammount, setAmmount] = useState();
+  const [ammount, setAmmount] = useState(0);
   const [successAlertVisible, setSuccessAlertVisible] = useState(false);
   const [failureAlertVisible, setFailureAlertVisible] = useState(false);
   const [failureText, setFailureText] = useState('');
-  const [sending, setSending] = useState(false);
+  const [date, setDate] = useState(new Date());
 
 
   const [users, setUsers] = useState([]);
@@ -86,18 +87,23 @@ export default function Transfer() {
       await getUsersData();
     };
 
-    const handleTransferModal = async (user) => {
+    const handleBorrowModal = async (user) => {
         setUsername(user);
         setVisible(true);
     };
 
-    const handleTransfer = async () => {
+    const handleBorrow = async () => {
+        if (ammount <= 0) {
+            setFailureAlertVisible(true);
+            setFailureText("Please select an positive ammount");
+            return;
+        }
+
         setSuccessAlertVisible(false)
         setFailureAlertVisible(false)
-        setSending(true);
-        let resp = await transferMoney(username, ammount,currency);
+        console.log(date)
+        let resp = await borrowMoney(username, ammount, currency, date);
         console.log(resp.data)
-        setSending(false);
         if (resp.status == 200) {
         if (resp.data.error === undefined) {
           setSuccessAlertVisible(true);
@@ -161,15 +167,15 @@ export default function Transfer() {
               <CTableDataCell className="text-center">
                 <div>{item.address}</div>
               </CTableDataCell>
-              <CButton color="info"  shape="rounded-pill" onClick={() => {handleTransferModal(item.username)}}>Transfer</CButton>
+              <CButton color="info"  shape="rounded-pill" onClick={() => {handleBorrowModal(item.username)}}>Borrow</CButton>
         
               <CModal  visible={isVisible(item.username)}>
               <CAlert color="success" dismissible visible={successAlertVisible} onClose={() => setSuccessAlertVisible(false)}>
-                Succesfully transfered {ammount} {currency} to {item}
+                Succesfully Borrowed {ammount} {currency} to {item}
                 </CAlert>
               <CAlert color="danger" dismissible visible={failureAlertVisible} onClose={() => setFailureAlertVisible(false)}>{failureText}</CAlert>
               <CModalHeader>
-              <CModalTitle>Transfer</CModalTitle>
+              <CModalTitle>Borrow</CModalTitle>
               </CModalHeader>
               <CModalBody>
                             <CInputGroup className="mb-2"  >
@@ -180,9 +186,13 @@ export default function Transfer() {
                             <option value="NIS">NIS</option>
                             </CFormSelect>
                             </CInputGroup>
+                            <CInputGroupText>Choose the date for return</CInputGroupText>
+                            <CInputGroup>
+                            <Calendar onChange={setDate} value={date}  minDate={new Date()} />
+                            </CInputGroup>
               </CModalBody>
               <CModalFooter>
-              <CButton color="success" onClick={handleTransfer}>
+              <CButton color="success" onClick={handleBorrow}>
                 Send
               </CButton>
               <CButton color="secondary" onClick={handleClose}>

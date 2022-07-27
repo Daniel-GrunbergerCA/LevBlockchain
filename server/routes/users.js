@@ -12,13 +12,15 @@ const upload = multer();
 router.get('/',  async (req, res) => {
 
 });
-
+const findFirstDiff = (str1, str2) =>
+  str2[[...str1].findIndex((el, index) => el !== str2[index])];
 
 router.get('/all', async function (req, res, next) {
     try {
-        user = await User.getByUsername(req.user.username);
+        let user = await User.getByUsername(req.user.username);
         if (user.position == "manager") {
-             users =  await User.getAllClients();
+            users =  await User.getAllClients();
+            users = users.filter(u => u.username !==  user.username)
             res.send(users);
         }
         else {
