@@ -1,7 +1,7 @@
 import axios from 'axios';
 axios.defaults.withCredentials = true
 
-const BE = "http://localhost:8080"
+const BE = "http://localhost:8081"
 const avatarAPI = `https://api.multiavatar.com/4645646`;
 
 
@@ -45,6 +45,11 @@ export const getCurrentUser = async () => {
         
 };
 
+export const getAllTransactions = async () => {
+    let resp = await axios.get(BE + "/transactions/all");
+    return resp.data;
+};
+
 export const getRandomAvatar = () => {
     return   axios.get(
         `${avatarAPI}/${Math.round(Math.random() * 1000)}`,
@@ -60,13 +65,23 @@ export const sendMessage = (receiver, content) => {
     return axios.post(BE + "/messages/send", data);
 };
 
-export const sendMoney = (receiver, ammount, currency) => {
+export const transferMoney = (receiver, ammount, currency) => {
     let data = { 
         receiver: receiver,
         ammount: ammount,
         currency: currency, 
     } 
     return axios.post(BE + "/transactions/transfer", data);
+};
+
+export const borrowMoney = (receiver, ammount, currency, date) => {
+    let data = { 
+        receiver: receiver,
+        ammount: ammount,
+        currency: currency, 
+        expiryDate: date
+    } 
+    return axios.post(BE + "/transactions/borrow", data);
 };
 
 export const getAllMessages = async (user) => {

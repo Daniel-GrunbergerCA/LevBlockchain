@@ -18,7 +18,7 @@ const TransactionSchema = new Schema({
     },
     ammount: 
     { 
-        type: String,
+        type: Number,
         required: true
     },
     status: {
@@ -29,6 +29,9 @@ const TransactionSchema = new Schema({
         type: String,
         enum : [transactions.LOAN, transactions.TRANSFER],
         required: true
+    },
+    loanExpireDate: {
+        type: Date
     },
     timestamp: {
         type: Date
@@ -43,10 +46,10 @@ const TransactionSchema = new Schema({
 });
 
 
-
   
-function computeHash() {
-        let strBlock = this.prevHash + this.timestamp + JSON.stringify(this.data);
+function computeHash(newBlock) 
+{
+        let strBlock = newBlock.prevHash  + newBlock.type + newBlock.status + newBlock.ammount + newBlock.receiver + newBlock.sender;
         return crypto.createHash("sha256").update(strBlock).digest("hex");
 }
 
@@ -81,9 +84,10 @@ TransactionSchema.statics.getTransactionsForUser = async function(username) {
 
 
 TransactionSchema.statics.add = async function(newBlock) {
-    newBlock.prevHash = TransactionSchema.getLastBlock().hash;
-    newBlock.hash = computeHash();
-    //this.blockchain.push(newBlock);
+    console.log(newBlock)
+    let one = await this.findOne({$orderby: {$natural : -1}});
+    newBlock.prevHash = one.hash;
+    newBlock.hash = computeHash(newBlock);
     return this.create(newBlock);
 };
 

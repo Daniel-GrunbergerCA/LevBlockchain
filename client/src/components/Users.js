@@ -112,7 +112,7 @@ export default function Users() {
   return (
     <div>
       <CTable align="middle" className="mb-0 border" hover responsive>
-        <CTableHead color="light">
+        <CTableHead color="dark">
           <CTableRow>
             <CTableHeaderCell className="text-center">
               <CIcon icon={cilPeople} />
@@ -122,6 +122,7 @@ export default function Users() {
             <CTableHeaderCell className="text-center">Username</CTableHeaderCell>
             <CTableHeaderCell className="text-center">Email</CTableHeaderCell>
             <CTableHeaderCell className="text-center">Address</CTableHeaderCell>
+            <CTableHeaderCell className="text-center"></CTableHeaderCell>
           </CTableRow>
         </CTableHead>
         <CTableBody>
