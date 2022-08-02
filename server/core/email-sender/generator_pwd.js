@@ -1,6 +1,11 @@
 
 
 
+
+
+
+
+
 function generatePassword() {
     var length = 8,
         charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
@@ -10,4 +15,4 @@ function generatePassword() {
     }
     return retVal;
 }
-module.exports = {ge};
+module.exports = {generatePassword};
