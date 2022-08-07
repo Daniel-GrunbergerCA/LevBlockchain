@@ -24,9 +24,9 @@ MessageSchema.statics.add = async function(msg) {
 
 MessageSchema.statics.getMessages = async function(sender, receiver) {
     return this.find({
-        $and: [
-            { sender: sender },
-            { receiver:receiver }
+        $or: [
+            { sender: sender, receiver: receiver },
+            { receiver:sender, sender: receiver }
         ]
     }).sort({ updatedAt: 1 });
 };

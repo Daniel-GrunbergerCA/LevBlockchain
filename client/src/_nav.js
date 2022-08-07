@@ -56,6 +56,11 @@ const _nav = [
         name: 'Transfer',
         to: '/actions/transfer',
       },
+      {
+        component: CNavItem,
+        name: 'Ask',
+        to: '/actions/ask',
+      },
     ],
   },
 ]

@@ -8,10 +8,10 @@ const mongoose = require("mongoose");
 var bodyParser = require('body-parser');
 var session = require('express-session');
 const User = require('./models/users');
-
+const http = require('http');
 var passport = require('passport');
 var app = express();
-
+const { Server } = require("socket.io");
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -25,7 +25,8 @@ passport.deserializeUser(User.deserializeUser());
 
 
 // setup mongo
-require('dotenv').config({path:'C:\\Users\\User\\Documents\\ProjectInternet5782\\LevBlockchain\\server\\joss.env'});
+//require('dotenv').config({path:'C:\\Users\\User\\Documents\\ProjectInternet5782\\LevBlockchain\\server\\joss.env'});
+require('dotenv').config();
 
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, {useNewUrlParser:true});
@@ -56,6 +57,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+function isLoggedIn(req,res,next) {
+    if(req.isAuthenticated()){
+        return next();
+    }
+    res.redirect("/login");
+  }
+
 var profileRouter = require('./routes/profile');
 var usersRouter = require('./routes/users');
 var indexRouter = require('./routes/index');
@@ -66,16 +74,34 @@ var levCoinRouter = require('./routes/levCoin');
 const emailSender = require('./routes/email-sender');
 
 const registerSender = require('./routes/register-sender');
+var notificationsRouter = require('./routes/notifications');
+var logoutRouter = require('./routes/logout');
+var feedbacksRouter = require('./routes/feedbacks');
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/login', loginRouter);
-app.use('/profile', profileRouter);
-app.use('/transactions', transactionsRouter);
-app.use('/messages', messagesRouter);
-app.use('/levCoin', levCoinRouter);
+app.use('/feedbacks',  feedbacksRouter);
+app.use('/users', isLoggedIn, usersRouter);
+app.use('/profile', isLoggedIn, profileRouter);
+app.use('/transactions', isLoggedIn, transactionsRouter);
+app.use('/messages', isLoggedIn, messagesRouter);
+app.use('/levCoin', isLoggedIn, levCoinRouter);
+app.use('/notifications', isLoggedIn, notificationsRouter);
+app.use('/logout', isLoggedIn, logoutRouter);
+
 app.use('/email', emailSender);
 app.use('/register',registerSender);
+var server = app.listen(8081, ()=>{console.log('listening in 8080...');});
+// var io = require('socket.io')(server, 
+//     {
+//         cors: {
+//             origin: '*',
+//           }
+//     });
+// app.set('socketio', io);
+// io.on('connection', (socket) => {
+//     console.log('a user connected');
+//   });
+// socket.emit('warningAlert', "blue");
 
-app.listen(8081, ()=>{console.log('Listening in 8080...');});
 module.exports = app;

@@ -87,7 +87,7 @@ export default function Profile() {
                 </div>
                 <div className='col-md-10'>
                     <div className='profile-head'>
-                        <h5>Daniel Grunberger</h5>
+                        <h5>{user.username}</h5>
 
                     <div className='col-md-16 pl-5 about-info'>
                         <div className='tab-content profile-tab'>
