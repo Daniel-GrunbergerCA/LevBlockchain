@@ -25,6 +25,11 @@ const Login = () => {
   const [usernameinfo, setUserName] = useState();
   const [passwordinfo, setPassword] = useState();
   const navigate = useNavigate();
+  const forgetSubmit = () => {
+    navigate('/Forgetpwd');
+  
+  
+  }
   const handleSubmit = async e => {
       e.preventDefault();
 
@@ -79,7 +84,7 @@ const Login = () => {
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
+                        <CButton color="link" className="px-0"  onClick={forgetSubmit}>
                           Forgot password?
                         </CButton>
                       </CCol>
@@ -87,7 +92,7 @@ const Login = () => {
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
+              <CCard className="text-white bg-primary py-5" style={{ width: '44%'   }}>
                 <CCardBody className="text-center">
                   <div>
                     <h2>Sign up</h2>

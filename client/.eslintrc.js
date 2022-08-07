@@ -13,6 +13,7 @@ module.exports = {
     },
   },
   extends: [
+    
     'react-app',
     'react-app/jest',
     'plugin:react/recommended', // Uses the recommended rules from @eslint-plugin-react

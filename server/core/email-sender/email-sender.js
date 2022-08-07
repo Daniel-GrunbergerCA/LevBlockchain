@@ -17,6 +17,7 @@ function sendEmail(title, msg, toMail = process.env.AWS_MAIL_TO, fromName = 'Jos
                   path: __dirname + '/tosend.png',
                   cid: 'uniq-tosend.png' 
                 }
+                
               ]
         };
         nodeMailer.createTransport({
@@ -24,8 +25,8 @@ function sendEmail(title, msg, toMail = process.env.AWS_MAIL_TO, fromName = 'Jos
             port: 465,
             secure: true, //true for 465 port, false for other ports
             auth: {
-                user: 'tocomplete',
-                pass: 'tocomplete'
+                user: 'confidential:-)',
+                pass: 'confidential:-)'
             }
         }).sendMail(mailOptions, (error, info) => {
             if (error) {

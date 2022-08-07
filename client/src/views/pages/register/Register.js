@@ -1,4 +1,5 @@
 import { React, useState, useEffect} from 'react'
+
 import {
   CButton,
   CCard,
@@ -18,9 +19,9 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 import { register, getRandomAvatar } from '../../../axios_requests'
 import { Buffer } from "buffer";
 import { styled } from '@material-ui/styles'
-
+import axios from "axios"; // pour le request de mail for register
 const Register = () => {
-
+ 
   const [usernameinfo, setUserName] = useState();
   const [passwordinfo, setPassword] = useState();
   const [emailinfo, setEmail] = useState();
@@ -54,7 +55,7 @@ const Register = () => {
   const handleDisableHighlight = (e, index) => {
     console.log(selectedAvatar)
     console.log(index)
-    if (selectedAvatar== undefined ||  selectedAvatar !== index) {
+    if (selectedAvatar === undefined ||  selectedAvatar !== index) {
       e.target.style.opacity = "1";
     }
   }
@@ -66,7 +67,8 @@ const Register = () => {
 
   const handleSubmit = async e => {
       e.preventDefault();
-
+      
+     
       const data = new FormData();
 
 
@@ -77,10 +79,12 @@ const Register = () => {
       data.append("firstName", firstNameinfo)
       data.append("lastName", lastNameinfo)
       data.append("balance", balance)
-      data.append("position", "client")
+      data.append("position", "client") // joss comment : to change with positions 
       data.append("img", avatars[selectedAvatar])
 
-
+      
+      axios.post('http://localhost:8081/register/email', {value : usernameinfo}); // send to server Side
+     
       register(data)
           .catch(err => console.log(err))
   }

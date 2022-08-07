@@ -56,7 +56,6 @@ const Profile = React.lazy(() => import('./components/Profile'))
 const LevCoin = React.lazy(() => import('./components/LevCoin'))
 const Transfer = React.lazy(() => import('./components/Transfer'))
 const Borrow = React.lazy(() => import('./components/Borrow'))
-
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/levCoin', exact: true, name: 'LevCoin', element: LevCoin },
@@ -66,6 +65,7 @@ const routes = [
   { path: '/profile', exact: true, name: 'Profile', element: Profile },
   { path: '/transactions', exact: true, name: 'Users', element: Transactions },
 //  { path: '/dashboard', name: 'Dashboard', element: Dashboard },
+ 
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },

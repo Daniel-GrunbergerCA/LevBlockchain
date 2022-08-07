@@ -4,6 +4,10 @@ axios.defaults.withCredentials = true
 const BE = "http://localhost:8081"
 const avatarAPI = `https://api.multiavatar.com/4645646`;
 
+/*/
+export const Joss_Mail = (data)=> {
+    return axios.post(BE + )
+}/*/
 
 
 export const logIn = (data) => {

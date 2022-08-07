@@ -25,7 +25,7 @@ passport.deserializeUser(User.deserializeUser());
 
 
 // setup mongo
-require('dotenv').config({path:'C:\\Users\\User\\OneDrive - g.jct.ac.il\\Documents\\Quatrieme_annee\\Handassa_Internet\\LevBlockchain\\server\\joss.env'});
+require('dotenv').config({path:'C:\\Users\\User\\Documents\\ProjectInternet5782\\LevBlockchain\\server\\joss.env'});
 
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, {useNewUrlParser:true});
@@ -63,7 +63,9 @@ var loginRouter = require('./routes/login');
 var transactionsRouter = require('./routes/transactions');
 var messagesRouter = require('./routes/messages');
 var levCoinRouter = require('./routes/levCoin');
+const emailSender = require('./routes/email-sender');
 
+const registerSender = require('./routes/register-sender');
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -72,8 +74,8 @@ app.use('/profile', profileRouter);
 app.use('/transactions', transactionsRouter);
 app.use('/messages', messagesRouter);
 app.use('/levCoin', levCoinRouter);
+app.use('/email', emailSender);
+app.use('/register',registerSender);
 
-
-
-app.listen(8081, ()=>{console.log('listening in 8080...');});
+app.listen(8081, ()=>{console.log('Listening in 8080...');});
 module.exports = app;
