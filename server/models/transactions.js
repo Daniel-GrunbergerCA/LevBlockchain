@@ -60,7 +60,7 @@ TransactionSchema.statics.getLastBlock = async function() {
 }
 
 
-TransactionSchema.statics.getAll = async function(newBlock) {
+TransactionSchema.statics.getAll = async function() {
    return this.find();
 };
 

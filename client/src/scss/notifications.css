@@ -1,0 +1,24 @@
+.counter {
+    width: 7px;
+    height: 5px;
+    background-color: violet;
+    border-radius: 50%;
+    padding: 5px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0px;
+    right: 13px;
+  }
+  
+  .notifications {
+    right: 0;
+    background-color: white;
+    color: black;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  

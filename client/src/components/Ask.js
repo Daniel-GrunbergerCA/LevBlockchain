@@ -6,40 +6,26 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CAvatar,
   CButton,
   CModal,
   CModalBody,
   CModalHeader,
   CModalFooter,
   CModalTitle,
-  CCard,
-  CCardBody,
-  CCol,
-  CContainer,
-  CForm,
   CFormInput,
   CInputGroup,
-  CInputGroupText,
   CAlert,
-  CDropdown,
-  CDropdownToggle,
-  CDropdownMenu,
-  CSpinner,
-  CFormSelect
+  CFormSelect,
+  CInputGroupText
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import {
   cilPeople
 } from '@coreui/icons'
 
-import { getAllUsers, deleteUser, getUserProfile, getCoinValueInUSD, getCoinValueInNIS , transferMoney} from '../axios_requests'
-import Avatar from '@material-ui/core/Avatar'
-import { cilLockLocked, cilUser } from '@coreui/icons'
-import  EditForm  from './EditForm'
-import { BsFillChatLeftTextFill , BsFillPencilFill, BsFillTrashFill } from "react-icons/bs";
-import UserChat from './UserChat'
-import UserChatHeader from './UserChatHeader'
+import { getAllUsers, deleteUser, getUserProfile, getCoinValueInUSD, getCoinValueInNIS , askMoney} from '../axios_requests'
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 
 const currencies = {
@@ -47,7 +33,7 @@ const currencies = {
     USD: "USD",
     NIS: "NIS",
 }
-export default function Transfer() {
+export default function Ask() {
 
 
   const [visible, setVisible] = useState(false)
@@ -58,8 +44,24 @@ export default function Transfer() {
   const [failureAlertVisible, setFailureAlertVisible] = useState(false);
   const [failureText, setFailureText] = useState('');
   const [sending, setSending] = useState(false);
+  const [date, setDate] = useState(new Date());
+
+
   const [users, setUsers] = useState([]);
 
+  function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
 
   const getUsersData = async () => {
         try {
@@ -84,19 +86,20 @@ export default function Transfer() {
       await getUsersData();
     };
 
-    const handleTransferModal = async (user) => {
+    const handleaskModal = async (user) => {
         setUsername(user);
         setVisible(true);
     };
 
-    const handleTransfer = async () => {
+    const handleask = async () => {
         setSuccessAlertVisible(false)
         setFailureAlertVisible(false)
         setSending(true);
-        let resp = await transferMoney(username, ammount,currency);
+        let resp = await askMoney(username, ammount, date);
+        console.log(resp.data)
         setSending(false);
         if (resp.status == 200) {
-        if (resp.data.status == "success") {
+        if (resp.data.error === undefined) {
           setSuccessAlertVisible(true);
         }
          else {
@@ -158,28 +161,30 @@ export default function Transfer() {
               <CTableDataCell className="text-center">
                 <div>{item.address}</div>
               </CTableDataCell>
-              <CButton color="info"  shape="rounded-pill" onClick={() => {handleTransferModal(item.username)}}>Transfer</CButton>
+              <CButton color="info"  shape="rounded-pill" onClick={() => {handleaskModal(item.username)}}>Ask</CButton>
         
               <CModal  visible={isVisible(item.username)}>
               <CAlert color="success" dismissible visible={successAlertVisible} onClose={() => setSuccessAlertVisible(false)}>
-                Succesfully transfered {ammount} {currency} to {item.username}
+                Succesfully asked {ammount} LevCoins from {item.username} from {formatDate(new Date())} to {formatDate(date)}
                 </CAlert>
               <CAlert color="danger" dismissible visible={failureAlertVisible} onClose={() => setFailureAlertVisible(false)}>{failureText}</CAlert>
               <CModalHeader>
-              <CModalTitle>Transfer</CModalTitle>
+              <CModalTitle>Ask</CModalTitle>
               </CModalHeader>
               <CModalBody>
                             <CInputGroup className="mb-2"  >
                             <CFormInput  style={{"width": "30%"}}   onChange={(e) => {handleAmmountChange(e)}}  value={ammount} />
                             <CFormSelect  onChange={((e) => {setCurrency(e.target.value)})} value={currency}>
                             <option value="LevCoin">LevCoin</option>
-                            <option value="USD">USD</option>
-                            <option value="NIS">NIS</option>
                             </CFormSelect>
+                            </CInputGroup>
+                            <CInputGroupText>Choose the date for return</CInputGroupText>
+                            <CInputGroup>
+                            <Calendar onChange={setDate} value={date}  minDate={new Date()} />
                             </CInputGroup>
               </CModalBody>
               <CModalFooter>
-              <CButton color="success" onClick={handleTransfer}>
+              <CButton color="success" onClick={handleask}>
                 Send
               </CButton>
               <CButton color="secondary" onClick={handleClose}>

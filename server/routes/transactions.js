@@ -5,7 +5,8 @@ const LevCoin = require('../models/levCoin');
 const User = require('../models/users');
 const axios = require('axios');
 
-router.get('/all', async function(req, res) {      
+router.get('/all', async function(req, res) {    
+   
     user = req.user.username;
     currentUser = await User.getByUsername(user);
     if (currentUser.position == "manager"){
@@ -24,8 +25,9 @@ router.get('/all', async function(req, res) {
     }
 });
 
+
+
 router.post('/transfer', async function (req, res, next) {
-    
     let currentUser = req.user;
     if (currentUser == undefined) {
         res.sendStatus(403);
@@ -35,16 +37,16 @@ router.post('/transfer', async function (req, res, next) {
     let newBlock = await getTransferInformationFromRequest(req, currentUser);
 
     // check user exists
-    receiver = await User.getByUsername(newBlock.receiver.username);
+    receiver = await User.getByUsername(newBlock.receiver);
     if (receiver == undefined) {
         res.send({"error": "User does not exist"});
         return;
     }
 
     // check has balance
-    currentUser = await User.getByUsername(newBlock.currentUser.username);
+    currentUser = await User.getByUsername(newBlock.sender);
 
-    if (currentUser.balance < ammount) {
+    if (currentUser.balance < newBlock.ammount) {
         newBlock.status = "failed";
         try {
             await Transactions.add(newBlock);
@@ -54,6 +56,8 @@ router.post('/transfer', async function (req, res, next) {
         return;
     }
 
+
+
     newBlock.type = "transfer";
 
     try {
@@ -61,11 +65,7 @@ router.post('/transfer', async function (req, res, next) {
     }
     catch (err) { console.log(`Failed: ${err}`) }
 
-    try {
-        await LevCoin.update(newBlock.ammount);
-    }
-    catch (err) { console.log(`Failed: ${err}`) }
-    
+   
     receiver.balance += Number(newBlock.ammount);
     try {
         await User.edit(receiver);
@@ -73,10 +73,16 @@ router.post('/transfer', async function (req, res, next) {
     catch (err) { console.log(`Failed: ${err}`) }
 
     currentUser.balance -= Number(newBlock.ammount);
+
     try {
         await User.edit(currentUser);
     }
     catch (err) { console.log(`Failed: ${err}`) }
+
+
+  
+    if (receiver.balance == 0) {
+    }
 
     res.send({"status": "success"});
 
@@ -105,6 +111,29 @@ router.post('/borrow', async function (req, res, next) {
 
     if (currentUser.balance < newBlock.ammount) {
         res.send({"error": "Unsificient funds"});
+        return;
+    }
+
+     // can't lend more than half of balance
+     if (currentUser.balance / 2 < newBlock.ammount) {
+        newBlock.status = "failed";
+        try {
+            await Transactions.add(newBlock);
+        }
+        catch (err) { console.log(`Failed: ${err}`) }
+        res.send({"error": "Can't lend more than half of your balance"});
+        return;
+    }
+
+
+    // can't take more than 60% of balance
+    if (receiver.balance * 0.6 < newBlock.ammount) {
+        newBlock.status = "failed";
+        try {
+            await Transactions.add(newBlock);
+        }
+        catch (err) { console.log(`Failed: ${err}`) }
+        res.send({"error": "Can't borrow more than 60% of receiver's balance"});
         return;
     }
 
@@ -192,5 +221,8 @@ async function convertNISToUSD(ammountInNIS) {
     console.log(ammountInNIS * conversionRate)
     return ammountInNIS * conversionRate;
 }
+
+
+
 
 module.exports = router;
