@@ -1,5 +1,6 @@
 import  { React, useEffect, useState } from 'react'
-import { getCoinValueInNIS, getCoinValueInUSD, getFeedbacks, getAnotherUser } from '../axios_requests'
+import {  getCoinValueInUSD, getFeedbacks } from '../axios_requests'
+import { BsFillStarFill } from "react-icons/bs";
 import {
     CSpinner, 
     CCard,
@@ -7,8 +8,15 @@ import {
     CCardBody,
     CCardTitle,
     CCardText,
-    CButton
+    CCarousel,
+    CCarouselItem,
+    CBadge,
+    CCallout
 } from '@coreui/react'
+
+import UsersChart from './UsersChart'
+import SocialMedia from './SocialMedia';
+
 
 export default function LevCoin() {
 
@@ -28,8 +36,6 @@ export default function LevCoin() {
 
      };
 
-    
-
     useEffect(()=> {
         getLevCoinValue();
         getFdbks();
@@ -41,33 +47,33 @@ export default function LevCoin() {
       }
 
   return (
-      <div>
+    <div>
+      <CCallout color="primary" style={{'marginLeft': 'auto', 'marginRight': 'auto', 'width': '40%'}}>
+      Current LevCoin value: {coinValue+8} USD 
+    </CCallout>
+      <UsersChart/>
+      <h1 style={{'marginLeft': 'auto', 'marginRight': 'auto', 'width': '30%'}}>Users feedback</h1>
+    <CCarousel controls indicators dark style={{'width': '50%', 'height': '260px', 'margin': 'auto'}}>
     {feedbacks.map((item, index) => (
-      <CCard key={index} style={{ width: '18rem', 'display': 'inline-block', 'height': '100%' }} >
+        <CCarouselItem style={{'marginLeft': '100px', 'marginTop': '-10px'}}  key={index}>
+
+      <CCard key={index} style={{ width: '18rem',    'height': '100%', backgroundColor: '#ADD8E6' }} >
     <CCardImage orientation="top" src={`data:image/svg+xml;base64,${item.image}`} style={{"width": '20%', "height": '50%', "marginTop": '5%', "marginLeft": '5%',}}/>
       <CCardTitle style={{"marginLeft": '5%',}}>{item.user}</CCardTitle>
     <CCardBody>
       <CCardText>
        {item.feedback}
       </CCardText>
-      <div className="ratings mt-3">
-      {Array(item.rating)
-            .fill(0)
-            .map((x, idx) => (
-              <div key={idx}>
-            <i className="bi bi-star"></i>
-      </div>
-            ))}
-      </div>
+     <BsFillStarFill color='FFA500' />  <BsFillStarFill color='FFA500'/>  <BsFillStarFill color='FFA500'/>  <BsFillStarFill color='FFA500'/>  <BsFillStarFill color='FFA500'/>
     </CCardBody>
   </CCard>
-
+  </CCarouselItem>
         ))}
+</CCarousel>
+<h3>Check we out on social media!</h3>
+<SocialMedia/>
+</div>
 
 
-
-
-
-    </div>
   )
 }

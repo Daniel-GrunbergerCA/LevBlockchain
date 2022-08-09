@@ -43,7 +43,6 @@ const AppSidebar = () => {
     {
       component: CNavGroup,
       name: 'Actions',
-      icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
       items: [
         {
           component: CNavItem,
@@ -75,12 +74,6 @@ const AppSidebar = () => {
       component: CNavItem,
       name: 'Transactions',
       to: '/transactions',
-    },
-
-    {
-      component: CNavItem,
-      name: 'Chat',
-      to: '/chat',
     },
   ]
 

@@ -1,0 +1,19 @@
+ist {
+    display: grid;
+    overflow: hidden;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+    max-width: 500px;
+  }
+  .list-item {
+    background-color: #ccc;
+    display: flex;
+    padding: 0.5em;
+    margin-bottom: 20px;
+  }
+  .list-content {
+    width: 100%;
+    display: inline-flex;
+  }
