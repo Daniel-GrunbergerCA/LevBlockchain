@@ -66,7 +66,6 @@ function isLoggedIn(req,res,next) {
 
 var profileRouter = require('./routes/profile');
 var usersRouter = require('./routes/users');
-var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var transactionsRouter = require('./routes/transactions');
 var messagesRouter = require('./routes/messages');
@@ -78,7 +77,6 @@ var notificationsRouter = require('./routes/notifications');
 var logoutRouter = require('./routes/logout');
 var feedbacksRouter = require('./routes/feedbacks');
 
-app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/feedbacks',  feedbacksRouter);
 app.use('/users', isLoggedIn, usersRouter);

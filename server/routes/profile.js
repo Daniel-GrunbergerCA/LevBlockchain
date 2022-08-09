@@ -1,29 +1,9 @@
-var express = require('express');
-var router = express.Router();
-const User = require('../models/users');
-var passport = require('passport');
+const express = require('express');
+const router = express.Router();
+const profileController =  require("../controller/profile");
 
+router.get('/', profileController.getProfile);
 
-router.get('/', async function(req, res) {       
-    currentUser = req.user;
-    if ( currentUser == undefined) {
-        res.redirect("/login");
-    } else {
-        user = await User.getByUsername(currentUser.username);
-        res.send(user);
-    }
-});
-
-router.post('/update', async function (req, res, next) {
-    currentUser = req.user.username;
-    currentUser = await User.getByUsername(currentUser);
-    updatedUser= new User({username : req.body.username, firstName: req.body.firstname, 
-        lastName: req.body.lastname, position:currentUser.position, 
-    password: currentUser.password, _id: currentUser._id});  
-    try {
-        await User.updateOne( {username: currentUser.username}, updatedUser);
-    }
-    catch (err) { console.log(`Failed: ${err}`) }
-});
+router.post('/updateProfile', profileController.updateProfile);
 
 module.exports = router;

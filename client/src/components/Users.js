@@ -6,22 +6,12 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CAvatar,
   CButton,
   CModal,
   CModalBody,
   CModalHeader,
   CModalFooter,
   CModalTitle,
-  CCard,
-  CCardBody,
-  CCol,
-  CContainer,
-  CForm,
-  CFormInput,
-  CInputGroup,
-  CInputGroupText,
-  CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import {
@@ -29,8 +19,6 @@ import {
 } from '@coreui/icons'
 
 import { getAllUsers, deleteUser, getUserProfile } from '../axios_requests'
-import Avatar from '@material-ui/core/Avatar'
-import { cilLockLocked, cilUser } from '@coreui/icons'
 import  EditForm  from './EditForm'
 import { BsFillChatLeftTextFill , BsFillPencilFill, BsFillTrashFill } from "react-icons/bs";
 import UserChat from './UserChat'

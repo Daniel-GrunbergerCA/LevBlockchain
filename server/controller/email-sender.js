@@ -1,13 +1,31 @@
 const nodeMailer = require('nodemailer');
 
 
+const sendResetEmail =  async (req, res) => {
+    const email = req.body; 
+    pwd_to_send = generatePassword();
+    my_text = 'Hi Sir \n your new password is  : '+'<b>' + pwd_to_send +'</b>';
+    sendEmail("By Joss", my_text, email);
+     
+    res.end()
+};
+
+function generatePassword() {
+    var length = 8,
+        charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+        retVal = "";
+    for (var i = 0, n = charset.length; i < length; ++i) {
+        retVal += charset.charAt(Math.floor(Math.random() * n));
+    }
+    return retVal;
+};
+
+
 function sendEmail(title, msg, toMail = process.env.AWS_MAIL_TO, fromName = 'Joss and Daniel Project 5782', fromMail = process.env.AWS_MAIL_FROM) {
-    //console.log('\n\n'+msg+'\n');
-    //return true;
         try {
         let mailOptions = {
-            from: '"' + fromName + '" <joss@148security.com>', // sender address
-            to: toMail, // list of receivers
+            from: '"' + fromName + '" <joss@148security.com>',
+            to: toMail,
             subject: title,
             text: msg,
             html: msg,
@@ -23,7 +41,7 @@ function sendEmail(title, msg, toMail = process.env.AWS_MAIL_TO, fromName = 'Jos
         nodeMailer.createTransport({
             host: 'email-smtp.eu-west-1.amazonaws.com',
             port: 465,
-            secure: true, //true for 465 port, false for other ports
+            secure: true, 
             auth: {
                 user: 'confidential:-)',
                 pass: 'confidential:-)'
@@ -31,9 +49,7 @@ function sendEmail(title, msg, toMail = process.env.AWS_MAIL_TO, fromName = 'Jos
         }).sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);
-                //res.status(400).send({success: false})
-            } else
-            console.log(title);
+            } 
         });
     } catch (e) {
         console.error(e);
@@ -42,4 +58,7 @@ function sendEmail(title, msg, toMail = process.env.AWS_MAIL_TO, fromName = 'Jos
         return true;
 }
 
-module.exports = {sendEmail};
+
+module.exports = {
+    sendResetEmail
+};

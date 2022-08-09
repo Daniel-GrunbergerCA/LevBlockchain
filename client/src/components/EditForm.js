@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
   CButton,
-  CModal,
-  CModalBody,
-  CModalHeader,
-  CModalFooter,
-  CModalTitle,
   CCard,
   CCardBody,
   CCol,
@@ -15,6 +10,7 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CAlert
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
@@ -41,6 +37,7 @@ export default function EditForm({user})  {
   const [firstNameinfo, setFirstName] = useState(user.firstName);
   const [passwordinfo, setPassword] = useState('');
   const [lastNameinfo, setLastName] = useState(user.lastName);
+  const [successAlertVisible, setSuccessAlertVisible] = useState(false);
  
 
   const handleSubmit = async e => {
@@ -51,12 +48,14 @@ export default function EditForm({user})  {
     data.append("password", passwordinfo)
     data.append("email", emailinfo)
     data.append("address", addressinfo)
-    data.append("firstname", firstNameinfo)
-    data.append("lastname", lastNameinfo)
+    data.append("firstName", firstNameinfo)
+    data.append("lastName", lastNameinfo)
 
 
-    editUser(data)
-    .catch(err => console.log(err));
+    const resp = await editUser(data);
+    if (resp.status === 200) {
+      setSuccessAlertVisible(true);
+    };
 
 }
 
@@ -65,6 +64,9 @@ export default function EditForm({user})  {
       <CRow className="justify-content-center">
         <CCol >
           <CCard className="mx-4">
+          <CAlert color="success" dismissible visible={successAlertVisible} onClose={() => setSuccessAlertVisible(false)}>
+                User succesfully edited!
+            </CAlert>
             <CCardBody className="p-4">
               <CForm enctype="multipart/form-data" >
                 <CInputGroup className="mb-3">

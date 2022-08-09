@@ -132,9 +132,6 @@ export const borrowMoney = (receiver, ammount, currency, date) => {
 }
 
 export const getAllMessages = async (user) => {
-  let data = {
-    receiver: user.username,
-  }
-  let resp = await axios.post(BE + '/messages/sent', data)
-  return resp
+  let resp = await axios.get(BE + '/messages/sent?receiver=' +  user.username);
+  return resp;
 }
