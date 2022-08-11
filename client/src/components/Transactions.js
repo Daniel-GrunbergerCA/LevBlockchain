@@ -44,7 +44,6 @@ export default function Transactions() {
         usersWithTransactions[index++] = transactions[i].sender
       }
     }
-    console.log(usersWithTransactions)
     return usersWithTransactions
   }
 
@@ -82,14 +81,14 @@ export default function Transactions() {
   }
 
   const getTransactionsPerUser = () => {
-    let usersWithTransactions = getUsersNames()
-    let mapTransactionsToUser = []
+    let usersWithTransactions = getUsersNames();
+    let mapTransactionsToUser = [];
     for (var i = 0; i < usersWithTransactions.length; i++) {
       mapTransactionsToUser[i] = 0
     }
 
     for (var i = 0; i < usersWithTransactions.length; i++) {
-      transactions.map((t, i) => {
+      transactions.map((t, idx) => {
         if (t.sender == usersWithTransactions[i]) {
           mapTransactionsToUser[i] += 1
         }
@@ -196,7 +195,7 @@ export default function Transactions() {
       </CTable>
 
       <CChart
-        style={{ width: '75%' }}
+        style={{ width: '100%' }}
         type="bar"
         data={{
           labels: ['Jan', 'Feb', 'Marh', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
@@ -210,9 +209,9 @@ export default function Transactions() {
         }}
         labels="months"
       ></CChart>
-
+      Transactions per sender
       <CChart
-        style={{ width: '75%' }}
+        style={{ width: '85%' }}
         type="doughnut"
         data={{
           labels: getUsersNames(),

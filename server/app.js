@@ -28,8 +28,12 @@ passport.deserializeUser(User.deserializeUser());
 //require('dotenv').config({path:'C:\\Users\\User\\Documents\\ProjectInternet5782\\LevBlockchain\\server\\joss.env'});
 require('dotenv').config();
 
-const uri = process.env.ATLAS_URI;
-mongoose.connect(uri, {useNewUrlParser:true});
+mongoose.connect(process.env.ATLAS_URI, 
+    {
+        dbName: process.env.DB_NAME,
+        useNewUrlParser:true
+    }
+    );
 const connection = mongoose.connection;
 connection.once('open', () => {
     console.log('Succesfullt connected to db');
@@ -76,6 +80,7 @@ const registerSender = require('./routes/register-sender');
 var notificationsRouter = require('./routes/notifications');
 var logoutRouter = require('./routes/logout');
 var feedbacksRouter = require('./routes/feedbacks');
+var healthzRouter = require('./routes/healthz');
 
 app.use('/login', loginRouter);
 app.use('/feedbacks',  feedbacksRouter);
@@ -86,10 +91,11 @@ app.use('/messages', isLoggedIn, messagesRouter);
 app.use('/levCoin', isLoggedIn, levCoinRouter);
 app.use('/notifications', isLoggedIn, notificationsRouter);
 app.use('/logout', isLoggedIn, logoutRouter);
+app.use('/healthz',  healthzRouter);
 
 app.use('/email', emailSender);
 app.use('/register',registerSender);
-var server = app.listen(8081, ()=>{console.log('listening in 8080...');});
+var server = app.listen(8080, ()=>{console.log('listening in 8080...');});
 // var io = require('socket.io')(server, 
 //     {
 //         cors: {

@@ -1,6 +1,6 @@
 var passport = require('passport');
 
-const login = () => {
+const login = (req, res) => {
   passport.authenticate('local', {
     failureRedirect: '/register',
     successRedirect: '/profile',

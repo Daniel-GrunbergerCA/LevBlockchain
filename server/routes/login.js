@@ -1,15 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var passport = require('passport');
+const loginController = require("../controller/login");
 
-// TODO: move to controller
-router.post(
-    '/',
-    passport.authenticate('local', {
-      failureRedirect: '/register',
-      successRedirect: '/profile',
-    }),
-  );
+router.post( '/', loginController.login);
   
 
 module.exports = router;

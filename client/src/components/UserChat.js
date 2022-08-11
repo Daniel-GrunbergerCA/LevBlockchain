@@ -59,7 +59,7 @@ export default function UserChat({userToChat, currentUser}) {
         message.fromSelf
       ? (
         <div className='senderChat'>
-        <div style={{"float": "right"}}  className="media w-50  ml-auto mb-3"><img src={`data:image/svg+xml;base64,${currentUser.image}`} height={50}  alt="user"  className="rounded-circle"/>
+        <div   className="media w-50  ml-auto mb-3"><img src={`data:image/svg+xml;base64,${currentUser.image}`} height={50}  alt="user"  className="rounded-circle"/>
         <div className="media-body ml-3">
           <div className="bg-light rounded py-2 px-3 mb-2">
             <p className="text-small mb-0 text-muted">{message.message}</p>

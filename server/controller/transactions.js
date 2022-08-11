@@ -22,13 +22,13 @@ const getAllTransactions = async (req, res) => {
     }
 }
 
+
 const transfer = async (req, res) => {
     let currentUser = req.user;
     if (currentUser == undefined) {
         res.sendStatus(403);
         return;
     } 
-
     let newBlock = await getTransferInformationFromRequest(req, currentUser);
 
     // check user exists
@@ -50,7 +50,6 @@ const transfer = async (req, res) => {
         res.send({"error": "Unsificient funds"});
         return;
     }
-
 
 
     newBlock.type = "transfer";

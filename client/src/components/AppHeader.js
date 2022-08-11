@@ -32,7 +32,7 @@ import { io } from "socket.io-client";
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
 import '../scss/notifications.css'
-import { getPendingNotifications, rejectNotification, dismissNotification, borrowMoney, acceptNotification, logout } from 'src/axios_requests'
+import { getPendingNotifications, rejectNotification, dismissNotification, borrowMoney, acceptNotification, logout } from '../axios_requests'
 import Calendar from 'react-calendar';
 import { useNavigate  } from 'react-router-dom';
 
